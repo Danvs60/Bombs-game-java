@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Daniel Bartolini
  * @version 03/2020
  */
-public class Game extends JFrame implements  MouseListener {
+public class Game extends JFrame implements MouseListener {
     private JPanel panel_a, panel_b, panel_c;
     private MyBox[] panels = new MyBox[10]; //Boxes that make the game board.
     private JButton playBtn, exitBtn, easyBtn, intermediateBtn, difficultBtn;
@@ -24,7 +24,7 @@ public class Game extends JFrame implements  MouseListener {
     /**
      * Constructor for the bombs game.
      * Calls the method makeFrame() to create the GUI.
-     * Initialises the player's score to 0 and selects easy mode.
+     * Initialises the player's score to 0 and sets easy mode to default.
      */
     public Game() {
         super("Chasing-bombs-db666");
@@ -44,6 +44,9 @@ public class Game extends JFrame implements  MouseListener {
      * the first panel contains the game board;
      * the second panel contains buttons that allow the user to restart or exit the game;
      * the third panel contains buttons that allow the user to change the game's difficulty level.
+     * The board can be made playable or not.
+     *
+     * @param play set the game playability.
      */
     public void makeFrame(boolean play) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +60,7 @@ public class Game extends JFrame implements  MouseListener {
         panel_a.setLayout(new GridLayout(2, 5, 2, 2));
         panel_a.setBackground(new Color(0, 122, 51));
 
-        if(play) {
+        if (play) {
             //Add a mouse listener to each box, then add it to the game board.
             for (int i = 0; i < 10; i++) {
                 panels[i] = new MyBox();
