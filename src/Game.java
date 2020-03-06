@@ -31,7 +31,7 @@ public class Game extends JFrame implements  MouseListener {
         score = 0;
         goal = 5; //easy mode
         setSize(800, 500);
-        makeFrame();
+        makeFrame(false);
     }
 
     //Main class to launch the game.
@@ -45,7 +45,7 @@ public class Game extends JFrame implements  MouseListener {
      * the second panel contains buttons that allow the user to restart or exit the game;
      * the third panel contains buttons that allow the user to change the game's difficulty level.
      */
-    public void makeFrame() {
+    public void makeFrame(boolean play) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout());
@@ -57,17 +57,18 @@ public class Game extends JFrame implements  MouseListener {
         panel_a.setLayout(new GridLayout(2, 5, 2, 2));
         panel_a.setBackground(new Color(0, 122, 51));
 
-        //Add a mouse listener to each box, then add it to the game board.
-        for (int i = 0; i < 10; i++) {
-            panels[i] = new MyBox();
-            panels[i].addMouseListener(this);
-            panel_a.add(panels[i]);
+        if(play) {
+            //Add a mouse listener to each box, then add it to the game board.
+            for (int i = 0; i < 10; i++) {
+                panels[i] = new MyBox();
+                panels[i].addMouseListener(this);
+                panel_a.add(panels[i]);
+            }
+            //Set a random bomb
+            Random r = new Random();
+            int rand = r.nextInt(10);
+            panels[rand].setBomb(true);
         }
-        //Set a random bomb
-        Random r = new Random();
-        int rand = r.nextInt(10);
-        panels[rand].setBomb(true);
-
         add(panel_a);
 
         //Panel B setup
@@ -75,21 +76,9 @@ public class Game extends JFrame implements  MouseListener {
         panel_b.setBackground(Color.white);
 
         playBtn = new JButton("Play a game");
-        //When play button is clicked reset the frame and recall the makeFrame function, as well as setting the score to 0.
-        playBtn.addActionListener(e -> {
-            contentPane.removeAll();
-            validate();
-            repaint();
-            makeFrame();
-            score = 0;
-            goal = 5;
-        });
-        exitBtn = new JButton("Exit");
-        exitBtn.addActionListener(e -> dispose());
-
         //the message to be shown in end game.
         msg = new JLabel();
-
+        exitBtn = new JButton("Exit");
         panel_b.add(playBtn);
         panel_b.add(exitBtn);
         panel_b.add(msg);
@@ -101,25 +90,37 @@ public class Game extends JFrame implements  MouseListener {
         panel_c.setBackground(new Color(203, 51, 59));
         easyBtn = new JButton("Easy");
         mode = new JLabel("Easy mode selected");
-        easyBtn.addActionListener(e -> {
-            goal = 5;
-            mode.setText("Easy mode selected");
-        });
         intermediateBtn = new JButton("Intermediate");
-        intermediateBtn.addActionListener(e -> {
-            goal = 7;
-            mode.setText("Intermediate mode selected");
-        });
         difficultBtn = new JButton("Difficult");
-        difficultBtn.addActionListener(e -> {
-            goal = 9;
-            mode.setText("Difficult mode selected");
-        });
         panel_c.add(easyBtn);
         panel_c.add(intermediateBtn);
         panel_c.add(difficultBtn);
         panel_c.add(mode);
         add(panel_c);
+
+        //When play button is clicked reset the frame and recall the makeFrame function, as well as setting the score to 0.
+        playBtn.addActionListener(e -> {
+            contentPane.removeAll();
+            validate();
+            repaint();
+            makeFrame(true);
+            score = 0;
+            goal = 5;
+
+            easyBtn.addActionListener(easy -> {
+                goal = 5;
+                mode.setText("Easy mode selected");
+            });
+            intermediateBtn.addActionListener(inter -> {
+                goal = 7;
+                mode.setText("Intermediate mode selected");
+            });
+            difficultBtn.addActionListener(diff -> {
+                goal = 9;
+                mode.setText("Difficult mode selected");
+            });
+        });
+        exitBtn.addActionListener(e -> dispose());
 
         setVisible(true);
     }
