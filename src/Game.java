@@ -13,7 +13,7 @@ import java.util.Random;
  * @author Daniel Bartolini
  * @version 03/2020
  */
-public class Game extends JFrame implements ActionListener, MouseListener {
+public class Game extends JFrame implements  MouseListener {
     private JPanel panel_a, panel_b, panel_c;
     private MyBox[] panels = new MyBox[10]; //Boxes that make the game board.
     private JButton playBtn, exitBtn, easyBtn, intermediateBtn, difficultBtn;
@@ -78,10 +78,11 @@ public class Game extends JFrame implements ActionListener, MouseListener {
         //When play button is clicked reset the frame and recall the makeFrame function, as well as setting the score to 0.
         playBtn.addActionListener(e -> {
             contentPane.removeAll();
-            revalidate();
+            validate();
             repaint();
             makeFrame();
             score = 0;
+            goal = 5;
         });
         exitBtn = new JButton("Exit");
         exitBtn.addActionListener(e -> dispose());
@@ -147,15 +148,10 @@ public class Game extends JFrame implements ActionListener, MouseListener {
             src.setSelected(true);
             score++;
         }
-        if (score == goal) {
+        if (score >= goal) {
             gameEnds(e);
             msg.setText("You win! You scored: " + score + " points.");
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override
