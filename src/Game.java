@@ -31,7 +31,7 @@ public class Game extends JFrame implements MouseListener {
         score = 0;
         goal = 5; //easy mode
         setSize(800, 500);
-        makeFrame(false);
+        makeFrame();
     }
 
     //Main class to launch the game.
@@ -45,13 +45,12 @@ public class Game extends JFrame implements MouseListener {
      * the second panel contains buttons that allow the user to restart or exit the game;
      * the third panel contains buttons that allow the user to change the game's difficulty level.
      * The board can be made playable or not.
-     *
-     * @param play set the game playability.
      */
-    public void makeFrame(boolean play) {
+    public void makeFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout());
+
         panel_a = new JPanel();
         panel_b = new JPanel();
         panel_c = new JPanel();
@@ -60,18 +59,6 @@ public class Game extends JFrame implements MouseListener {
         panel_a.setLayout(new GridLayout(2, 5, 2, 2));
         panel_a.setBackground(new Color(0, 122, 51));
 
-        if (play) {
-            //Add a mouse listener to each box, then add it to the game board.
-            for (int i = 0; i < 10; i++) {
-                panels[i] = new MyBox();
-                panels[i].addMouseListener(this);
-                panel_a.add(panels[i]);
-            }
-            //Set a random bomb
-            Random r = new Random();
-            int rand = r.nextInt(10);
-            panels[rand].setBomb(true);
-        }
         add(panel_a);
 
         //Panel B setup
@@ -101,14 +88,13 @@ public class Game extends JFrame implements MouseListener {
         panel_c.add(mode);
         add(panel_c);
 
-        //When play button is clicked reset the frame and recall the makeFrame function, as well as setting the score to 0.
+        //When play button is clicked reset the left panel as well as setting the score to 0.
         playBtn.addActionListener(e -> {
-            contentPane.removeAll();
-            validate();
-            repaint();
-            makeFrame(true);
+            msg.setText("");
+            panel_a.removeAll();
+            reset();
+            panel_a.revalidate();
             score = 0;
-            goal = 5;
 
             easyBtn.addActionListener(easy -> {
                 goal = 5;
@@ -126,6 +112,23 @@ public class Game extends JFrame implements MouseListener {
         exitBtn.addActionListener(e -> dispose());
 
         setVisible(true);
+    }
+
+    /**
+     * Resets every component on the game board panel to start a new game.
+     * A random bomb box is selected.
+     */
+    public void reset() {
+        //Add a mouse listener to each box, then add it to the game board.
+        for (int i = 0; i < 10; i++) {
+            panels[i] = new MyBox();
+            panels[i].addMouseListener(this);
+            panel_a.add(panels[i]);
+        }
+        //Set a random bomb
+        Random r = new Random();
+        int rand = r.nextInt(10);
+        panels[rand].setBomb(true);
     }
 
     /**
